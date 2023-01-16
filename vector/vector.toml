@@ -1,0 +1,48 @@
+[api]
+enabled = true
+address = "0.0.0.0:8686"
+
+[sources.demo_logs]
+type = "demo_logs"
+interval = 1.0
+format = "json"
+
+[transforms.parse_json]
+type = "remap"
+inputs = ["demo_logs"]
+source = '''
+  . = parse_json!(.message)
+'''
+
+[transforms.filter_head]
+type = "filter"
+inputs = ["parse_json"]
+condition = '.method != "HEAD"'
+
+[transforms.method_lowercase]
+type = "remap"
+inputs = ["filter_head"]
+source = '''
+  .method = downcase(string!(.method))
+'''
+
+[transforms.delete_bytes]
+type = "remap"
+inputs = ["method_lowercase"]
+source = '''
+  del(.bytes)
+'''
+
+[sinks.console]
+inputs = ["demo_logs"]
+target = "stdout"
+type = "console"
+encoding.codec = "json"
+
+[sinks.api]
+inputs = ["delete_bytes"]
+type = "http"
+uri = "http://192.168.1.50:8888"
+method = "post"
+compression = "none"
+encoding.codec = "json"
