@@ -4,8 +4,8 @@ metadata:
   name: logging-loki-s3
   namespace: openshift-logging
 stringData:
-  access_key_id: AKIA4I6322C6FVOGYYCS
-  access_key_secret: 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
+  access_key_id: AKIA4I6322C6FVOTEST
+  access_key_secret: MWHt9GjXpDEwg7Oyq5DZG+riwTksfOXue9ITEST
   bucketnames: ocploki
   endpoint: https://s3.us-east-2.amazonaws.com
   region: us-east-2
