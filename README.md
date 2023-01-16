@@ -1,5 +1,9 @@
 # Openshift Logging with Loki and Vector
 
+This repository collects information to deploy and configure the new Openshift Logging Stack base on Loki and Vector.
+
+The idea is to deploy the mentioned solutions and be able to integrate some changes in the stack in order to parse some logs and redirect them to external systems.
+
 ## Prerequisites
 
 - Openshift 4.11+
@@ -12,9 +16,13 @@ oc create -f https://raw.githubusercontent.com/openshift/elasticsearch-operator/
 
 ## Install Logging Stack
 
+First of all, it is required to install the required operators in order to be able to deploy the logging solution in Openshift:
+
 - Install Openshift Logging 5.5+ Operator
 
 - Install Loki Operator
+
+Once the operators are ready, it is time to create the required resources to deploy Loki & Vector and redirect all the logs to the Openshift logging stack:
 
 - Create s3 credentials
 
@@ -40,6 +48,9 @@ oc create -f logging.yaml
 oc create -f log-forward.yaml
 ```
 
+Finally, it is required to check the Openshift Console in order to see the logs aggregated (Console -> Observe -> Logs)
+
+
 ## Testing Vector Locally
 
 - Start Local Sink API based on Javascript and NodeJS
@@ -62,24 +73,27 @@ docker run \
   timberio/vector:0.26.0-debian
 ```
 
-- Review the api logs in the console
+- Review the api logs in the Vector container console and API console
 
 ```$bash
+### Vector container console
+{"message":"{\"host\":\"75.45.136.51\",\"user-identifier\":\"meln1ks\",\"datetime\":\"16/Jan/2023:17:08:45\",\"method\":\"PUT\",\"request\":\"/observability/metrics/production\",\"protocol\":\"HTTP/1.1\",\"status\":\"501\",\"bytes\":42655,\"referer\":\"https://up.org/wp-admin\"}","source_type":"demo_logs","timestamp":"2023-01-16T17:08:45.491798247Z"}
+
+### API console
 ...
-[
   {
-    message: '{"host":"18.60.164.119","user-identifier":"benefritz","datetime":"16/Jan/2023:16:17:40","method":"DELETE","request":"/booper/bopper/mooper/mopper","protocol":"HTTP/2.0","status":"501","bytes":23899,"referer":"https://names.org/observability/metrics/production"}',
-    source_type: 'demo_logs',
-    timestamp: '2023-01-16T16:17:40.988473975Z'
-  },
-  {
-    message: '{"host":"48.128.135.38","user-identifier":"benefritz","datetime":"16/Jan/2023:16:17:41","method":"HEAD","request":"/do-not-access/needs-work","protocol":"HTTP/1.1","status":"410","bytes":20303,"referer":"https://for.de/controller/setup"}',
-    source_type: 'demo_logs',
-    timestamp: '2023-01-16T16:17:41.988470845Z'
+    datetime: '16/Jan/2023:17:08:45',
+    host: '75.45.136.51',
+    method: 'put',
+    protocol: 'HTTP/1.1',
+    referer: 'https://up.org/wp-admin',
+    request: '/observability/metrics/production',
+    status: '501',
+    'user-identifier': 'meln1ks'
   }
-]
 ```
 
+IMPORTANT: It is important to pay special attention to the vector.toml in order to analyse the transform rules integrated
 
 ## Author
 
