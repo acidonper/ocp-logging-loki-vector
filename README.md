@@ -51,7 +51,17 @@ oc create -f log-forward.yaml
 Finally, it is required to check the Openshift Console in order to see the logs aggregated (Console -> Observe -> Logs)
 
 
-## Testing Vector Locally
+## Vector
+
+Vector is a high-performance observability data pipeline that puts organizations in control of their observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. 
+
+Regarding the logical data procesing architecture, it is based on the followin components:
+
+- Sources: Enable to take in observability data from a wide variety of [sources](https://vector.dev/docs/reference/configuration/sources/)
+- Transforms: Allow to transform the data through a set of [tools](https://vector.dev/docs/reference/configuration/transforms/)
+- Sinks: Deliver the observability data transformed to a variety of [destinations](https://vector.dev/docs/reference/configuration/sinks/)
+
+### Testing Vector Locally
 
 - Start Local Sink API based on Javascript and NodeJS
 
@@ -61,12 +71,12 @@ npm install
 npm run start
 ```
 
-- Create or edit vector/vector.toml (_*it is important to modify the uri in order to specify your local machine IP_)
+- Create or edit vector/vector.toml (_*it is important to modify the uri in order to specify your local machine IP for the containers gateway_)
 
 - Start Podman pod
 
 ```$bash
-docker run \
+podamn run \
   -d \
   -v $PWD/vector/vector.toml:/etc/vector/vector.toml:Z \
   -p 8686:8686 \
@@ -94,6 +104,7 @@ docker run \
 ```
 
 IMPORTANT: It is important to pay special attention to the vector.toml in order to analyse the transform rules integrated
+
 
 ## Author
 
